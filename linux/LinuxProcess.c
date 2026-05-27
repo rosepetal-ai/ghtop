@@ -113,6 +113,8 @@ const ProcessFieldData Process_fields[LAST_PROCESSFIELD] = {
 #endif
    [GPU_TIME] = { .name = "GPU_TIME", .title = "GPU_TIME ", .description = "Total GPU time", .flags = PROCESS_FLAG_LINUX_GPU, .defaultSortDesc = true, },
    [GPU_PERCENT] = { .name = "GPU_PERCENT", .title = " GPU% ", .description = "Percentage of the GPU time the process used in the last sampling", .flags = PROCESS_FLAG_LINUX_GPU, .defaultSortDesc = true, },
+   [GPU_MEM] = { .name = "GPUMEM", .title = " GPUMEM ", .description = "GPU memory used by the process (sum of DRM memory types, in bytes)", .flags = PROCESS_FLAG_LINUX_GPU_MEM, .defaultSortDesc = true, },
+   [DOCKER] = { .name = "DOCKER", .title = "DOCKER          ", .description = "Name of the docker container the process is running in", .flags = PROCESS_FLAG_LINUX_DOCKER | PROCESS_FLAG_LINUX_CGROUP, .autoWidth = true, },
 };
 
 Process* LinuxProcess_new(const Machine* host) {
@@ -125,6 +127,7 @@ Process* LinuxProcess_new(const Machine* host) {
 void Process_delete(Object* cast) {
    LinuxProcess* this = (LinuxProcess*) cast;
    Process_done((Process*)cast);
+   free(this->docker_name);
    free(this->container_short);
    free(this->cgroup_short);
    free(this->cgroup);
@@ -248,6 +251,11 @@ static void LinuxProcess_rowWriteField(const Row* super, RichString* str, Proces
    case CMAJFLT: Row_printCount(str, lp->cmajflt, coloring); return;
    case GPU_PERCENT: Row_printPercentage(lp->gpu_percent, buffer, n, 5, &attr); break;
    case GPU_TIME: Row_printNanoseconds(str, lp->gpu_time, coloring); return;
+   case GPU_MEM: Row_printBytes(str, lp->gpu_mem, coloring); return;
+   case DOCKER:
+      xSnprintf(buffer, n, "%-*.*s ", Row_fieldWidths[DOCKER], Row_fieldWidths[DOCKER], lp->docker_name ? lp->docker_name : "-");
+      RichString_appendWide(str, attr, buffer);
+      return;
    case M_DRS: Row_printBytes(str, lp->m_drs * lhost->pageSize, coloring); return;
    case M_LRS:
       if (lp->m_lrs) {
@@ -472,6 +480,10 @@ static int LinuxProcess_compareByKey(const Process* v1, const Process* v2, Proce
    }
    case GPU_TIME:
       return SPACESHIP_NUMBER(p1->gpu_time, p2->gpu_time);
+   case GPU_MEM:
+      return SPACESHIP_NUMBER(p1->gpu_mem, p2->gpu_mem);
+   case DOCKER:
+      return SPACESHIP_NULLSTR(p1->docker_name, p2->docker_name);
    case ISCONTAINER:
       return SPACESHIP_NUMBER(v1->isRunningInContainer, v2->isRunningInContainer);
    default:

@@ -1,3 +1,20 @@
+# ghtop
+
+[![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](COPYING?raw=true)
+
+`ghtop` es un fork de [htop](https://htop.dev) adaptado a las características particulares de los equipos que usa Rosepetal (workstations y servidores de inferencia/entrenamiento con GPU NVIDIA y workloads dockerizados).
+
+Sobre el htop original se añaden dos columnas pensadas para los equipos `rosepetal-dep-*`:
+
+- **`GPUMEM`** — memoria de GPU usada por proceso (en B/KiB/MiB/GiB). Se obtiene sumando las entradas `drm-memory-*` de `/proc/<pid>/fdinfo/*` deduplicando por `(client-id, pdev)` para no contar varias fds del mismo cliente DRM.
+- **`DOCKER`** — nombre del contenedor docker en el que corre el proceso (no la ID). Se extrae el ID corto del cgroup (`docker-<id>.scope` o `/docker/<id>`) y se resuelve contra una caché que ejecuta `docker ps` cada 5 s. Si docker no está disponible se cae al ID corto; si el proceso no está en docker se muestra `-`.
+
+El binario resultante se llama `ghtop` (en lugar de `htop`) para poder convivir con el htop del sistema. La columna `GPUMEM` también activa automáticamente la lectura de fdinfo cuando se incluye en la pantalla, sin necesidad de marcar el flag GPU original.
+
+El resto del README mantiene la documentación de upstream htop, aplicable a este fork.
+
+---
+
 # [![htop logo](htop-logo.png)](https://htop.dev)
 
 [![CI](https://github.com/htop-dev/htop/workflows/CI/badge.svg)](https://github.com/htop-dev/htop/actions)

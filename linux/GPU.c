@@ -83,6 +83,7 @@ void GPU_readProcessData(LinuxProcessTable* lpt, LinuxProcess* lp, openat_arg_t 
    DIR* fdinfoDir = NULL;
    ClientInfo* parsed_ids = NULL;
    unsigned long long int new_gpu_time = 0;
+   unsigned long long int new_gpu_mem = 0;
 
    /* check only if active in last check or last scan was more than 5s ago */
    if (lp->gpu_activityMs != 0 && host->monotonicMs - lp->gpu_activityMs < 5000) {
@@ -166,6 +167,52 @@ void GPU_readProcessData(LinuxProcessTable* lpt, LinuxProcess* lp, openat_arg_t 
             assert(!pdev || String_eq(pdev, p));
             if (!pdev)
                pdev = xStrdup(p);
+         } else if (line[0] == 'm' && String_startsWith(line, "memory-")) {
+            /* Per https://docs.kernel.org/gpu/drm-usage-stats.html the value is
+             * an unsigned integer in KiB (default) or with explicit unit. We
+             * accept B/KiB/MiB/GiB to be safe. Only count once per unique
+             * (client-id, pdev) tuple to avoid double-counting fds. */
+            if (sstate == SECST_DUPLICATE)
+               continue;
+
+            const char* delim = strchr(line, ':');
+            if (!delim)
+               continue;
+
+            const char* p = delim + 1;
+            while (isspace((unsigned char)*p))
+               p++;
+
+            char* endptr;
+            errno = 0;
+            unsigned long long int value = strtoull(p, &endptr, 10);
+            if (errno || endptr == p)
+               continue;
+
+            while (isspace((unsigned char)*endptr))
+               endptr++;
+
+            unsigned long long int bytes;
+            if (*endptr == '\0' || String_startsWith(endptr, "KiB"))
+               bytes = value * 1024ULL;
+            else if (String_startsWith(endptr, "MiB"))
+               bytes = value * 1024ULL * 1024ULL;
+            else if (String_startsWith(endptr, "GiB"))
+               bytes = value * 1024ULL * 1024ULL * 1024ULL;
+            else if (*endptr == 'B' || String_startsWith(endptr, " B"))
+               bytes = value;
+            else
+               continue;
+
+            if (sstate == SECST_UNKNOWN) {
+               if (client_id != INVALID_CLIENT_ID && !is_duplicate_client(parsed_ids, client_id, pdev))
+                  sstate = SECST_NEW;
+               else
+                  sstate = SECST_DUPLICATE;
+            }
+
+            if (sstate == SECST_NEW)
+               new_gpu_mem += bytes;
          } else if (line[0] == 'e' && String_startsWith(line, "engine-")) {
             if (sstate == SECST_DUPLICATE)
                continue;
@@ -228,6 +275,7 @@ void GPU_readProcessData(LinuxProcessTable* lpt, LinuxProcess* lp, openat_arg_t 
 out:
 
    lp->gpu_time = new_gpu_time;
+   lp->gpu_mem = new_gpu_mem;
 
    while (parsed_ids) {
       ClientInfo* next = parsed_ids->next;

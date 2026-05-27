@@ -1,5 +1,5 @@
 if !HTOP_PCP
-bin_PROGRAMS = htop
+bin_PROGRAMS = ghtop
 myhtopplatprogram = htop.c
 else
 bin_PROGRAMS = pcp-htop
@@ -190,6 +190,7 @@ linux_platform_headers = \
 	generic/uname.h \
 	linux/CGroupUtils.h \
 	linux/Compat.h \
+	linux/DockerNames.h \
 	linux/GPU.h \
 	linux/HugePageMeter.h \
 	linux/IOPriority.h \
@@ -218,6 +219,7 @@ linux_platform_sources = \
 	generic/uname.c \
 	linux/CGroupUtils.c \
 	linux/Compat.c \
+	linux/DockerNames.c \
 	linux/GPU.c \
 	linux/HugePageMeter.c \
 	linux/IOPriorityPanel.c \
@@ -509,11 +511,11 @@ endif
 
 # ----
 
-htop_SOURCES = $(myhtopplatprogram) $(myhtopheaders) $(myhtopplatheaders) $(myhtopsources) $(myhtopplatsources)
-nodist_htop_SOURCES = config.h
+ghtop_SOURCES = $(myhtopplatprogram) $(myhtopheaders) $(myhtopplatheaders) $(myhtopsources) $(myhtopplatsources)
+nodist_ghtop_SOURCES = config.h
 
 target:
-	echo $(htop_SOURCES)
+	echo $(ghtop_SOURCES)
 
 profile:
 	$(MAKE) all AM_CPPFLAGS="-pg -O2 -DNDEBUG"

@@ -41,6 +41,7 @@ in the source distribution for its full text.
 #include "UsersTable.h"
 #include "linux/CGroupUtils.h"
 #include "linux/Compat.h"
+#include "linux/DockerNames.h"
 #include "linux/GPU.h"
 #include "linux/LinuxMachine.h"
 #include "linux/LinuxProcess.h"
@@ -296,6 +297,7 @@ void ProcessTable_delete(Object* cast) {
    #ifdef HAVE_DELAYACCT
    LibNl_destroyNetlinkSocket(this);
    #endif
+   DockerNames_done();
    free(this);
 }
 
@@ -1018,6 +1020,42 @@ static void LinuxProcessTable_readOpenVZData(LinuxProcess* process, openat_arg_t
 
 #endif /* HAVE_OPENVZ */
 
+static bool isHexDigit(char c) {
+   return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+}
+
+/*
+ * Scan the cgroup string for a docker container id and copy its 12-char prefix
+ * into out (must be at least 13 bytes). Returns true on success. Handles both
+ * the systemd-style ".../docker-<id>.scope" and the legacy "/docker/<id>" forms.
+ */
+static bool LinuxProcessTable_extractDockerId(const char* cgroup, char out[13]) {
+   if (!cgroup)
+      return false;
+
+   const char* needles[] = { "docker-", "/docker/", NULL };
+   for (size_t i = 0; needles[i]; i++) {
+      const char* p = strstr(cgroup, needles[i]);
+      if (!p)
+         continue;
+
+      p += strlen(needles[i]);
+
+      size_t hexLen = 0;
+      while (hexLen < 64 && isHexDigit(p[hexLen]))
+         hexLen++;
+
+      if (hexLen < 12)
+         continue;
+
+      memcpy(out, p, 12);
+      out[12] = '\0';
+      return true;
+   }
+
+   return false;
+}
+
 /*
  * Read /proc/<pid>/cgroup (thread-specific data)
  */
@@ -1035,6 +1073,10 @@ static void LinuxProcessTable_readCGroupFile(LinuxProcess* process, openat_arg_t
       if (process->container_short) {
          free(process->container_short);
          process->container_short = NULL;
+      }
+      if (process->docker_name) {
+         free(process->docker_name);
+         process->docker_name = NULL;
       }
       return;
    }
@@ -1094,6 +1136,11 @@ static void LinuxProcessTable_readCGroupFile(LinuxProcess* process, openat_arg_t
       } else {
          Row_updateFieldWidth(CONTAINER, strlen("N/A"));
       }
+      if (process->docker_name) {
+         Row_updateFieldWidth(DOCKER, strlen(process->docker_name));
+      } else {
+         Row_updateFieldWidth(DOCKER, strlen("-"));
+      }
       return;
    }
 
@@ -1119,6 +1166,18 @@ static void LinuxProcessTable_readCGroupFile(LinuxProcess* process, openat_arg_t
       Row_updateFieldWidth(CONTAINER, strlen("N/A"));
       free(process->container_short);
       process->container_short = NULL;
+   }
+
+   char dockerId[13];
+   if (LinuxProcessTable_extractDockerId(process->cgroup, dockerId)) {
+      const char* name = DockerNames_lookup(dockerId);
+      const char* value = name ? name : dockerId;
+      Row_updateFieldWidth(DOCKER, strlen(value));
+      free_and_xStrdup(&process->docker_name, value);
+   } else {
+      Row_updateFieldWidth(DOCKER, strlen("-"));
+      free(process->docker_name);
+      process->docker_name = NULL;
    }
 }
 
@@ -1885,9 +1944,10 @@ static bool LinuxProcessTable_recurseProcTree(LinuxProcessTable* this, openat_ar
       }
       #endif
 
-      if (ss->flags & PROCESS_FLAG_LINUX_GPU || GPUMeter_active()) {
+      if (ss->flags & (PROCESS_FLAG_LINUX_GPU | PROCESS_FLAG_LINUX_GPU_MEM) || GPUMeter_active()) {
          if (mainTask) {
             lp->gpu_time = mainTask->gpu_time;
+            lp->gpu_mem = mainTask->gpu_mem;
          } else {
             GPU_readProcessData(this, lp, procFd);
          }
@@ -1975,6 +2035,10 @@ void ProcessTable_goThroughEntries(ProcessTable* super) {
          engine->curTime = 0;
       }
    }
+
+   /* Refresh docker container id->name cache (rate-limited internally). */
+   if (settings->ss->flags & PROCESS_FLAG_LINUX_DOCKER)
+      DockerNames_refresh(host->monotonicMs);
 
    /* PROCDIR is an absolute path */
    assert(PROCDIR[0] == '/');

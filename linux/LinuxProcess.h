@@ -31,6 +31,8 @@ in the source distribution for its full text.
 #define PROCESS_FLAG_LINUX_AUTOGROUP 0x00080000
 #define PROCESS_FLAG_LINUX_GPU       0x00100000
 #define PROCESS_FLAG_LINUX_CONTAINER 0x00200000
+#define PROCESS_FLAG_LINUX_GPU_MEM   0x00400000
+#define PROCESS_FLAG_LINUX_DOCKER    0x00800000
 
 typedef struct LinuxProcess_ {
    Process super;
@@ -93,6 +95,8 @@ typedef struct LinuxProcess_ {
    char* cgroup;
    char* cgroup_short;
    char* container_short;
+   /* Docker container name (or short ID if name lookup failed), NULL if not in docker */
+   char* docker_name;
    unsigned int oom;
    #ifdef HAVE_DELAYACCT
    unsigned long long int delay_read_time;
@@ -114,6 +118,8 @@ typedef struct LinuxProcess_ {
    float gpu_percent;
    /* Activity of GPU: 0 if active, otherwise time of last scan in milliseconds */
    uint64_t gpu_activityMs;
+   /* Total GPU memory currently used by the process, in bytes (sum of all drm-memory-* types) */
+   unsigned long long int gpu_mem;
 
    /* Autogroup scheduling (CFS) information */
    long int autogroup_id;
