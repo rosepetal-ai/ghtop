@@ -1,0 +1,35 @@
+Format: 1.8
+Date: Wed, 27 May 2026 23:32:43 +0000
+Source: ghtop
+Binary: ghtop
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 3.6.0-r1~ubuntu22.04
+Distribution: jammy
+Urgency: medium
+Maintainer: Rosepetal <dev@rosepetal.ai>
+Changed-By: Rosepetal <dev@rosepetal.ai>
+Description:
+ ghtop      - ghtop - htop fork with NVIDIA GPU and Docker columns
+Changes:
+ ghtop (3.6.0-r1~ubuntu22.04) jammy; urgency=medium
+ .
+   * Initial Rosepetal packaging of ghtop, an htop fork that adds:
+     - GPU usage bar in the default header layout
+     - Temperatures meter (CPU/GPU/PCH/RAM/NVMe/NIC)
+     - GPUMEM and GMEM% per-process columns (NVML-backed)
+     - DOCKER per-process column resolving cgroup ids via `docker ps`
+   * Binary installed as /usr/bin/ghtop to coexist with system htop.
+   * Automated build for jammy.
+Checksums-Sha1:
+ 23ba4680ccfec718e6e74153e05e772e3ca27dc2 571638 ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
+ 1bf9f598b7e70bb12ef1ae501633860d89414c82 6648 ghtop_3.6.0-r1~ubuntu22.04_amd64.buildinfo
+ ab91663634319bd7f0fc4168cb16f831a328af69 189954 ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
+Checksums-Sha256:
+ 8ef966e750d0e8e3be5ba48418d67a7caa149b4fb80f0240c50bb70173a32e39 571638 ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
+ eb1a6943936287ea3c706375338734e6b8363fc8102219349de79f7edf05142d 6648 ghtop_3.6.0-r1~ubuntu22.04_amd64.buildinfo
+ 0a20f63bf0e613001f867387fbf4947ce6574b2db5f4de505108b1e717e6cd12 189954 ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
+Files:
+ 1b1e8ae80730e7b22bad6b49ca1f8ca4 571638 debug optional ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
+ ff6a60016d610406e328f2ea901769cb 6648 utils optional ghtop_3.6.0-r1~ubuntu22.04_amd64.buildinfo
+ 0ccf4df94da65ebf6364cbc366d552bf 189954 utils optional ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
