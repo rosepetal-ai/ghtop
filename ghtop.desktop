@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=Htop
+Name=Ghtop
 GenericName=Process Viewer
 GenericName[ca]=Visualitzador de processos
 GenericName[da]=Procesfremviser
@@ -64,8 +64,8 @@ Comment[tr]=Sistem Süreçlerini Göster
 Comment[uk]=Перегляд системних процесів
 Comment[zh_CN]=显示系统进程
 Comment[zh_TW]=顯示系統行程
-Icon=htop
-Exec=htop
+Icon=ghtop
+Exec=ghtop
 Terminal=true
 Categories=System;Monitor;ConsoleOnly;
 Keywords=system;process;task

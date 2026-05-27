@@ -1827,6 +1827,33 @@ AC_SUBST([AM_CFLAGS])
 AC_SUBST([AM_CPPFLAGS])
 
 # ----------------------------------------------------------------------
+# NVIDIA Management Library (NVML) - mandatory on Linux for per-process
+# GPU memory accounting on NVIDIA proprietary driver (which does not
+# expose drm-memory-* in fdinfo).
+# ----------------------------------------------------------------------
+
+if test "$my_htop_platform" = linux; then
+   dnl Prefer the unversioned -lnvidia-ml (provided by libnvidia-ml-dev),
+   dnl else fall back to linking directly against the SONAME so the runtime
+   dnl package (libnvidia-ml1) is enough.
+   AC_CHECK_LIB([nvidia-ml], [nvmlInit_v2],
+      [LIBS="-lnvidia-ml $LIBS"],
+      [
+         htop_save_LIBS=$LIBS
+         LIBS="-l:libnvidia-ml.so.1 $LIBS"
+         AC_MSG_CHECKING([for nvmlInit_v2 in -l:libnvidia-ml.so.1])
+         AC_LINK_IFELSE(
+            [AC_LANG_PROGRAM([[extern int nvmlInit_v2(void);]], [[return nvmlInit_v2();]])],
+            [AC_MSG_RESULT([yes])],
+            [
+               AC_MSG_RESULT([no])
+               LIBS=$htop_save_LIBS
+               AC_MSG_ERROR([cannot find required library libnvidia-ml (package libnvidia-ml1)])
+            ])
+      ])
+fi
+
+# ----------------------------------------------------------------------
 
 
 # ----------------------------------------------------------------------
@@ -1846,7 +1873,7 @@ AM_CONDITIONAL([HTOP_PCP], [test "$my_htop_platform" = pcp])
 AM_CONDITIONAL([HTOP_UNSUPPORTED], [test "$my_htop_platform" = unsupported])
 
 AC_SUBST(my_htop_platform)
-AC_CONFIG_FILES([Makefile htop.1])
+AC_CONFIG_FILES([Makefile ghtop.1])
 AC_OUTPUT
 
 if test "$my_htop_platform" = unsupported; then

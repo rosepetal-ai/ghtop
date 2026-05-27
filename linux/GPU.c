@@ -17,6 +17,7 @@ in the source distribution for its full text.
 
 #include "linux/Compat.h"
 #include "linux/LinuxMachine.h"
+#include "linux/NvmlGpu.h"
 
 
 typedef unsigned long long int ClientID;
@@ -88,6 +89,7 @@ void GPU_readProcessData(LinuxProcessTable* lpt, LinuxProcess* lp, openat_arg_t 
    /* check only if active in last check or last scan was more than 5s ago */
    if (lp->gpu_activityMs != 0 && host->monotonicMs - lp->gpu_activityMs < 5000) {
       lp->gpu_percent = 0.0F;
+      lp->gpu_mem = lp->gpu_mem_drm + NvmlGpu_getProcessMem(Process_getPid(&lp->super));
       return;
    }
    lp->gpu_activityMs = host->monotonicMs;
@@ -275,7 +277,8 @@ void GPU_readProcessData(LinuxProcessTable* lpt, LinuxProcess* lp, openat_arg_t 
 out:
 
    lp->gpu_time = new_gpu_time;
-   lp->gpu_mem = new_gpu_mem;
+   lp->gpu_mem_drm = new_gpu_mem;
+   lp->gpu_mem = new_gpu_mem + NvmlGpu_getProcessMem(Process_getPid(&lp->super));
 
    while (parsed_ids) {
       ClientInfo* next = parsed_ids->next;

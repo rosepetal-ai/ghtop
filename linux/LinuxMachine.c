@@ -31,6 +31,7 @@ in the source distribution for its full text.
 #include "UsersTable.h"
 
 #include "linux/Compat.h"
+#include "linux/NvmlGpu.h"
 #include "linux/Platform.h" // needed for GNU/hurd to get PATH_MAX  // IWYU pragma: keep
 
 #ifdef HAVE_SENSORS_SENSORS_H
@@ -805,6 +806,7 @@ void Machine_scan(Machine* super) {
    LinuxMachine_scanZfsArcstats(this);
    LinuxMachine_scanZramInfo(this);
    LinuxMachine_scanCPUTime(this);
+   NvmlGpu_refresh();
 
    const Settings* settings = super->settings;
    if (settings->showCPUFrequency
@@ -871,6 +873,8 @@ Machine* Machine_new(UsersTable* usersTable, uid_t userId) {
    LinuxMachine_assignCCDs(this, ccds);
    LinuxMachine_computeThreadIndices(this);
 
+   NvmlGpu_init();
+
    return super;
 }
 
@@ -879,6 +883,8 @@ void Machine_delete(Machine* super) {
    GPUEngineData* gpuEngineData = this->gpuEngineData;
 
    Machine_done(super);
+
+   NvmlGpu_done();
 
    while (gpuEngineData) {
       GPUEngineData* next = gpuEngineData->next;

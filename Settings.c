@@ -118,12 +118,8 @@ static bool Settings_validateMeters(Settings* this) {
 }
 
 static void Settings_defaultMeters(Settings* this, const Machine* host) {
-   unsigned int initialCpuCount = host->activeCPUs;
+   (void)host;
    size_t sizes[] = { 3, 3 };
-
-   if (initialCpuCount > 4 && initialCpuCount <= 128) {
-      sizes[1]++;
-   }
 
    // Release any previously allocated memory
    Settings_deleteColumns(this);
@@ -136,46 +132,18 @@ static void Settings_defaultMeters(Settings* this, const Machine* host) {
       this->hColumns[i].len = sizes[i];
    }
 
-   int r = 0;
-
-   if (initialCpuCount > 128) {
-      // Just show the average, ricers need to config for impressive screenshots
-      this->hColumns[0].names[0] = xStrdup("CPU");
-      this->hColumns[0].modes[0] = BAR_METERMODE;
-   } else if (initialCpuCount > 32) {
-      this->hColumns[0].names[0] = xStrdup("LeftCPUs8");
-      this->hColumns[0].modes[0] = BAR_METERMODE;
-      this->hColumns[1].names[r] = xStrdup("RightCPUs8");
-      this->hColumns[1].modes[r++] = BAR_METERMODE;
-   } else if (initialCpuCount > 16) {
-      this->hColumns[0].names[0] = xStrdup("LeftCPUs4");
-      this->hColumns[0].modes[0] = BAR_METERMODE;
-      this->hColumns[1].names[r] = xStrdup("RightCPUs4");
-      this->hColumns[1].modes[r++] = BAR_METERMODE;
-   } else if (initialCpuCount > 8) {
-      this->hColumns[0].names[0] = xStrdup("LeftCPUs2");
-      this->hColumns[0].modes[0] = BAR_METERMODE;
-      this->hColumns[1].names[r] = xStrdup("RightCPUs2");
-      this->hColumns[1].modes[r++] = BAR_METERMODE;
-   } else if (initialCpuCount > 4) {
-      this->hColumns[0].names[0] = xStrdup("LeftCPUs");
-      this->hColumns[0].modes[0] = BAR_METERMODE;
-      this->hColumns[1].names[r] = xStrdup("RightCPUs");
-      this->hColumns[1].modes[r++] = BAR_METERMODE;
-   } else {
-      this->hColumns[0].names[0] = xStrdup("AllCPUs");
-      this->hColumns[0].modes[0] = BAR_METERMODE;
-   }
+   this->hColumns[0].names[0] = xStrdup("CPU");
+   this->hColumns[0].modes[0] = BAR_METERMODE;
    this->hColumns[0].names[1] = xStrdup("Memory");
    this->hColumns[0].modes[1] = BAR_METERMODE;
    this->hColumns[0].names[2] = xStrdup("Swap");
    this->hColumns[0].modes[2] = BAR_METERMODE;
-   this->hColumns[1].names[r] = xStrdup("Tasks");
-   this->hColumns[1].modes[r++] = TEXT_METERMODE;
-   this->hColumns[1].names[r] = xStrdup("LoadAverage");
-   this->hColumns[1].modes[r++] = TEXT_METERMODE;
-   this->hColumns[1].names[r] = xStrdup("Uptime");
-   this->hColumns[1].modes[r++] = TEXT_METERMODE;
+   this->hColumns[1].names[0] = xStrdup("Tasks");
+   this->hColumns[1].modes[0] = TEXT_METERMODE;
+   this->hColumns[1].names[1] = xStrdup("LoadAverage");
+   this->hColumns[1].modes[1] = TEXT_METERMODE;
+   this->hColumns[1].names[2] = xStrdup("Uptime");
+   this->hColumns[1].modes[2] = TEXT_METERMODE;
 }
 
 static const char* toFieldName(Hashtable* columns, int id, bool* enabled) {
@@ -810,7 +778,7 @@ Settings* Settings_new(const Machine* host, Hashtable* dynamicMeters, Hashtable*
    this->shadowOtherUsers = false;
    this->showThreadNames = false;
    this->hideKernelThreads = true;
-   this->hideUserlandThreads = false;
+   this->hideUserlandThreads = true;
    this->hideRunningInContainer = false;
    this->highlightBaseName = false;
    this->highlightDeletedExe = true;
@@ -857,13 +825,13 @@ Settings* Settings_new(const Machine* host, Hashtable* dynamicMeters, Hashtable*
       char* configDir = NULL;
       char* htopDir = NULL;
       if (xdgConfigHome && xdgConfigHome[0] == '/') {
-         this->initialFilename = String_cat(xdgConfigHome, "/htop/htoprc");
+         this->initialFilename = String_cat(xdgConfigHome, "/ghtop/htoprc");
          configDir = xStrdup(xdgConfigHome);
-         htopDir = String_cat(xdgConfigHome, "/htop");
+         htopDir = String_cat(xdgConfigHome, "/ghtop");
       } else {
-         this->initialFilename = String_cat(home, CONFIGDIR "/htop/htoprc");
+         this->initialFilename = String_cat(home, CONFIGDIR "/ghtop/htoprc");
          configDir = String_cat(home, CONFIGDIR);
-         htopDir = String_cat(home, CONFIGDIR "/htop");
+         htopDir = String_cat(home, CONFIGDIR "/ghtop");
       }
       (void) mkdir(configDir, 0700);
       (void) mkdir(htopDir, 0700);

@@ -37,7 +37,7 @@ config.cache
 config.sub
 configure
 depcomp
-htop.1
+ghtop.1
 pcp-htop.5
 install-sh
 libtool

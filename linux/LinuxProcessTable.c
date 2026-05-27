@@ -1137,7 +1137,7 @@ static void LinuxProcessTable_readCGroupFile(LinuxProcess* process, openat_arg_t
          Row_updateFieldWidth(CONTAINER, strlen("N/A"));
       }
       if (process->docker_name) {
-         Row_updateFieldWidth(DOCKER, strlen(process->docker_name));
+         Row_updateFieldWidth(DOCKER, MINIMUM(strlen(process->docker_name), (size_t)DOCKER_MAX_WIDTH));
       } else {
          Row_updateFieldWidth(DOCKER, strlen("-"));
       }
@@ -1172,7 +1172,7 @@ static void LinuxProcessTable_readCGroupFile(LinuxProcess* process, openat_arg_t
    if (LinuxProcessTable_extractDockerId(process->cgroup, dockerId)) {
       const char* name = DockerNames_lookup(dockerId);
       const char* value = name ? name : dockerId;
-      Row_updateFieldWidth(DOCKER, strlen(value));
+      Row_updateFieldWidth(DOCKER, MINIMUM(strlen(value), (size_t)DOCKER_MAX_WIDTH));
       free_and_xStrdup(&process->docker_name, value);
    } else {
       Row_updateFieldWidth(DOCKER, strlen("-"));
@@ -1948,6 +1948,7 @@ static bool LinuxProcessTable_recurseProcTree(LinuxProcessTable* this, openat_ar
          if (mainTask) {
             lp->gpu_time = mainTask->gpu_time;
             lp->gpu_mem = mainTask->gpu_mem;
+            lp->gpu_mem_drm = mainTask->gpu_mem_drm;
          } else {
             GPU_readProcessData(this, lp, procFd);
          }

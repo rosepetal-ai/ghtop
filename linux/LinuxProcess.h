@@ -34,6 +34,8 @@ in the source distribution for its full text.
 #define PROCESS_FLAG_LINUX_GPU_MEM   0x00400000
 #define PROCESS_FLAG_LINUX_DOCKER    0x00800000
 
+#define DOCKER_MAX_WIDTH 25
+
 typedef struct LinuxProcess_ {
    Process super;
    IOPriority ioPriority;
@@ -118,8 +120,12 @@ typedef struct LinuxProcess_ {
    float gpu_percent;
    /* Activity of GPU: 0 if active, otherwise time of last scan in milliseconds */
    uint64_t gpu_activityMs;
-   /* Total GPU memory currently used by the process, in bytes (sum of all drm-memory-* types) */
+   /* Total GPU memory currently used by the process, in bytes
+    * (drm-memory-* contributions plus NVML-reported usage). */
    unsigned long long int gpu_mem;
+   /* DRM-only contribution to gpu_mem, kept separately so the 5s
+    * fdinfo-scan optimization can still refresh the NVML portion. */
+   unsigned long long int gpu_mem_drm;
 
    /* Autogroup scheduling (CFS) information */
    long int autogroup_id;

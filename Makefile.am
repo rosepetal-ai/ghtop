@@ -6,23 +6,23 @@ bin_PROGRAMS = pcp-htop
 myhtopplatprogram = pcp-htop.c
 endif
 
-dist_man_MANS = htop.1
+dist_man_MANS = ghtop.1
 EXTRA_DIST = \
 	$(dist_man_MANS) \
 	autogen.sh \
-	htop.desktop \
-	htop.png \
-	htop.svg \
+	ghtop.desktop \
+	ghtop.png \
+	ghtop.svg \
 	build-aux/compile \
 	build-aux/depcomp \
 	build-aux/install-sh \
 	build-aux/missing
 applicationsdir = $(datadir)/applications
-applications_DATA = htop.desktop
+applications_DATA = ghtop.desktop
 pixmapdir = $(datadir)/pixmaps
-pixmap_DATA = htop.png
+pixmap_DATA = ghtop.png
 appicondir = $(datadir)/icons/hicolor/scalable/apps
-appicon_DATA = htop.svg
+appicon_DATA = ghtop.svg
 
 AM_CFLAGS += -DSYSCONFDIR="\"$(sysconfdir)\"" -I"$(top_srcdir)/$(my_htop_platform)"
 AM_LDFLAGS =
@@ -199,6 +199,7 @@ linux_platform_headers = \
 	linux/LinuxMachine.h \
 	linux/LinuxProcess.h \
 	linux/LinuxProcessTable.h \
+	linux/NvmlGpu.h \
 	linux/OpenRCMeter.h \
 	linux/Platform.h \
 	linux/PressureStallMeter.h \
@@ -227,6 +228,7 @@ linux_platform_sources = \
 	linux/LinuxMachine.c \
 	linux/LinuxProcess.c \
 	linux/LinuxProcessTable.c \
+	linux/NvmlGpu.c \
 	linux/OpenRCMeter.c \
 	linux/Platform.c \
 	linux/PressureStallMeter.c \

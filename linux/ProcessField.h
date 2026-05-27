@@ -53,6 +53,7 @@ in the source distribution for its full text.
    ISCONTAINER = 134,            \
    GPU_MEM = 135,                \
    DOCKER = 136,                 \
+   GPU_MEM_PERCENT = 137,        \
    // End of list
 
 

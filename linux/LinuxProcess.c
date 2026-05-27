@@ -28,6 +28,7 @@ in the source distribution for its full text.
 #include "Scheduling.h"
 #include "Settings.h"
 #include "linux/Compat.h"
+#include "linux/NvmlGpu.h"
 #include "linux/IOPriority.h"
 #include "linux/LinuxMachine.h"
 
@@ -114,6 +115,7 @@ const ProcessFieldData Process_fields[LAST_PROCESSFIELD] = {
    [GPU_TIME] = { .name = "GPU_TIME", .title = "GPU_TIME ", .description = "Total GPU time", .flags = PROCESS_FLAG_LINUX_GPU, .defaultSortDesc = true, },
    [GPU_PERCENT] = { .name = "GPU_PERCENT", .title = " GPU% ", .description = "Percentage of the GPU time the process used in the last sampling", .flags = PROCESS_FLAG_LINUX_GPU, .defaultSortDesc = true, },
    [GPU_MEM] = { .name = "GPUMEM", .title = " GPUMEM ", .description = "GPU memory used by the process (sum of DRM memory types, in bytes)", .flags = PROCESS_FLAG_LINUX_GPU_MEM, .defaultSortDesc = true, },
+   [GPU_MEM_PERCENT] = { .name = "GMEM%", .title = "GMEM% ", .description = "GPU memory used by the process as a percentage of total GPU memory", .flags = PROCESS_FLAG_LINUX_GPU_MEM, .defaultSortDesc = true, },
    [DOCKER] = { .name = "DOCKER", .title = "DOCKER          ", .description = "Name of the docker container the process is running in", .flags = PROCESS_FLAG_LINUX_DOCKER | PROCESS_FLAG_LINUX_CGROUP, .autoWidth = true, },
 };
 
@@ -252,6 +254,12 @@ static void LinuxProcess_rowWriteField(const Row* super, RichString* str, Proces
    case GPU_PERCENT: Row_printPercentage(lp->gpu_percent, buffer, n, 5, &attr); break;
    case GPU_TIME: Row_printNanoseconds(str, lp->gpu_time, coloring); return;
    case GPU_MEM: Row_printBytes(str, lp->gpu_mem, coloring); return;
+   case GPU_MEM_PERCENT: {
+      unsigned long long total = NvmlGpu_getTotalMem();
+      float pct = total ? (100.0F * (float)lp->gpu_mem / (float)total) : 0.0F;
+      Row_printPercentage(pct, buffer, n, 5, &attr);
+      break;
+   }
    case DOCKER:
       xSnprintf(buffer, n, "%-*.*s ", Row_fieldWidths[DOCKER], Row_fieldWidths[DOCKER], lp->docker_name ? lp->docker_name : "-");
       RichString_appendWide(str, attr, buffer);
@@ -481,6 +489,7 @@ static int LinuxProcess_compareByKey(const Process* v1, const Process* v2, Proce
    case GPU_TIME:
       return SPACESHIP_NUMBER(p1->gpu_time, p2->gpu_time);
    case GPU_MEM:
+   case GPU_MEM_PERCENT:
       return SPACESHIP_NUMBER(p1->gpu_mem, p2->gpu_mem);
    case DOCKER:
       return SPACESHIP_NULLSTR(p1->docker_name, p2->docker_name);
