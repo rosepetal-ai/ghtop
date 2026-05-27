@@ -55,3 +55,14 @@ callgrind.out.*
 
 # Language Servers
 /.cache/clangd/
+
+# debian build artifacts
+debian/.debhelper/
+debian/autoreconf.*
+debian/debhelper-build-stamp
+debian/files
+debian/*.log
+debian/*.substvars
+debian/ghtop/
+debian/ghtop.*
+!debian/changelog

@@ -1,0 +1,10 @@
+ghtop (3.6.0-r1) UNRELEASED; urgency=medium
+
+  * Initial Rosepetal packaging of ghtop, an htop fork that adds:
+    - GPU usage bar in the default header layout
+    - Temperatures meter (CPU/GPU/PCH/RAM/NVMe/NIC)
+    - GPUMEM and GMEM% per-process columns (NVML-backed)
+    - DOCKER per-process column resolving cgroup ids via `docker ps`
+  * Binary installed as /usr/bin/ghtop to coexist with system htop.
+
+ -- Rosepetal <dev@rosepetal.ai>  Wed, 27 May 2026 00:00:00 +0000
