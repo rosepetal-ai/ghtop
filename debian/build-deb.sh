@@ -11,16 +11,20 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-dist="$(. /etc/os-release && echo "${VERSION_CODENAME:-${UBUNTU_CODENAME:-unknown}}")"
-ver_id="$(. /etc/os-release && echo "${VERSION_ID:-0.0}")"
+. /etc/os-release
+dist="${VERSION_CODENAME:-${UBUNTU_CODENAME:-unknown}}"
+ver_id="${VERSION_ID:-0}"
+os_id="${ID:-unknown}"
 
 case "$dist" in
-   jammy|noble) ;;
-   *) echo "Unsupported distribution: $dist (expected jammy or noble)" >&2; exit 1 ;;
+   jammy|noble) suffix="ubuntu${ver_id}" ;;
+   bookworm)    suffix="deb12" ;;
+   trixie)      suffix="deb13" ;;
+   *) echo "Unsupported distribution: $dist (expected jammy/noble/bookworm/trixie)" >&2; exit 1 ;;
 esac
 
 base_version="$(dpkg-parsechangelog -SVersion)"
-target_version="${base_version}~ubuntu${ver_id}"
+target_version="${base_version}~${suffix}"
 
 # Stash original changelog, stamp distro + version, restore on exit.
 # dpkg-source --after-build may delete stray *.orig in the source tree, so

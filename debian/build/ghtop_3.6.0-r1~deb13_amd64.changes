@@ -1,0 +1,34 @@
+Format: 1.8
+Date: Wed, 27 May 2026 23:37:35 +0000
+Source: ghtop
+Binary: ghtop ghtop-dbgsym
+Architecture: amd64
+Version: 3.6.0-r1~deb13
+Distribution: trixie
+Urgency: medium
+Maintainer: Rosepetal <dev@rosepetal.ai>
+Changed-By: Rosepetal <dev@rosepetal.ai>
+Description:
+ ghtop      - ghtop - htop fork with NVIDIA GPU and Docker columns
+Changes:
+ ghtop (3.6.0-r1~deb13) trixie; urgency=medium
+ .
+   * Initial Rosepetal packaging of ghtop, an htop fork that adds:
+     - GPU usage bar in the default header layout
+     - Temperatures meter (CPU/GPU/PCH/RAM/NVMe/NIC)
+     - GPUMEM and GMEM% per-process columns (NVML-backed)
+     - DOCKER per-process column resolving cgroup ids via `docker ps`
+   * Binary installed as /usr/bin/ghtop to coexist with system htop.
+   * Automated build for trixie.
+Checksums-Sha1:
+ 6fbe1b3d03967c2b183fdabd8b52ec74e19af3e5 443152 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ 472aacd63395000fd9b5d13e2d0eb571486a3b45 5674 ghtop_3.6.0-r1~deb13_amd64.buildinfo
+ 596acd34089df7792ca0b53933d869141ddb49ae 183820 ghtop_3.6.0-r1~deb13_amd64.deb
+Checksums-Sha256:
+ 4dbede66fb0b411750210541e0f13b21621cce966cfdaccfdc00d99a623c7789 443152 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ 1df88a1ec996cb9ae7e0b6474fd8d874b3125b3e07155dc178dfefde933321c2 5674 ghtop_3.6.0-r1~deb13_amd64.buildinfo
+ 7a83d0fa188642d8d551b8de13086d789fc02d2fea2fe676f0b24723b148ac9e 183820 ghtop_3.6.0-r1~deb13_amd64.deb
+Files:
+ d1ee58cceb7d6def1c86f24c6132f366 443152 debug optional ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ 9b83877d3af02d9180d7000abfacc655 5674 utils optional ghtop_3.6.0-r1~deb13_amd64.buildinfo
+ 0d5d4d7504aad57255152841dd14739a 183820 utils optional ghtop_3.6.0-r1~deb13_amd64.deb
