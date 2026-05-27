@@ -1,0 +1,35 @@
+Format: 1.8
+Date: Wed, 27 May 2026 23:19:35 +0000
+Source: ghtop
+Binary: ghtop
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 3.6.0-r1~ubuntu24.04
+Distribution: noble
+Urgency: medium
+Maintainer: Rosepetal <dev@rosepetal.ai>
+Changed-By: Rosepetal <dev@rosepetal.ai>
+Description:
+ ghtop      - ghtop - htop fork with NVIDIA GPU and Docker columns
+Changes:
+ ghtop (3.6.0-r1~ubuntu24.04) noble; urgency=medium
+ .
+   * Initial Rosepetal packaging of ghtop, an htop fork that adds:
+     - GPU usage bar in the default header layout
+     - Temperatures meter (CPU/GPU/PCH/RAM/NVMe/NIC)
+     - GPUMEM and GMEM% per-process columns (NVML-backed)
+     - DOCKER per-process column resolving cgroup ids via `docker ps`
+   * Binary installed as /usr/bin/ghtop to coexist with system htop.
+   * Automated build for noble.
+Checksums-Sha1:
+ cd13f66a215c7173be423ccc1790f709f9459d09 565070 ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
+ b06304682ee98a1fcc16b6328c0f9d9e58f6790d 6882 ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
+ 80de1c73067058e076565904c08cc72bf37ac3dd 187888 ghtop_3.6.0-r1~ubuntu24.04_amd64.deb
+Checksums-Sha256:
+ 47b4a7fb3a2f1bede7ab586e1550c80e21c79a878a97c1c104f1b7d5be1bfcf7 565070 ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
+ 1e563c98087738c96032528b5649a871e27a432bafc6f3402c4128bb81e5a52d 6882 ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
+ f4af72b844041cacb0c1e506afe8d721c0354fe55e5350cfdb854ec77e24dcc5 187888 ghtop_3.6.0-r1~ubuntu24.04_amd64.deb
+Files:
+ b9505074ae11d362ef615fb65adc4faa 565070 debug optional ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
+ ed862bfbf55147564c82fcf4ea708c04 6882 utils optional ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
+ 90e2596463a0e8625aad88da9ea3c747 187888 utils optional ghtop_3.6.0-r1~ubuntu24.04_amd64.deb

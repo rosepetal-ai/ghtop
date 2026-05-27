@@ -37,11 +37,11 @@ dch --release "" >/dev/null
 
 dpkg-buildpackage -us -uc -b
 
-mkdir -p ../ghtop-debs
-mv ../ghtop_${target_version}_*.deb     ../ghtop-debs/
-mv ../ghtop_${target_version}_*.buildinfo ../ghtop-debs/ 2>/dev/null || true
-mv ../ghtop_${target_version}_*.changes   ../ghtop-debs/ 2>/dev/null || true
+mkdir -p debian/build
+mv ../ghtop_${target_version}_*.deb     debian/build/
+mv ../ghtop_${target_version}_*.buildinfo debian/build/ 2>/dev/null || true
+mv ../ghtop_${target_version}_*.changes   debian/build/ 2>/dev/null || true
 
 echo
 echo "Built ghtop_${target_version} for ${dist}:"
-ls -la ../ghtop-debs/ghtop_${target_version}_*.deb
+ls -la debian/build/ghtop_${target_version}_*.deb
