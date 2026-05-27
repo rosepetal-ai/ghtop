@@ -192,6 +192,7 @@ linux_platform_headers = \
 	linux/Compat.h \
 	linux/DockerNames.h \
 	linux/GPU.h \
+	linux/GPUMemMeter.h \
 	linux/HugePageMeter.h \
 	linux/IOPriority.h \
 	linux/IOPriorityPanel.h \
@@ -223,6 +224,7 @@ linux_platform_sources = \
 	linux/Compat.c \
 	linux/DockerNames.c \
 	linux/GPU.c \
+	linux/GPUMemMeter.c \
 	linux/HugePageMeter.c \
 	linux/IOPriorityPanel.c \
 	linux/LibSensors.c \

@@ -27,4 +27,19 @@ unsigned long long int NvmlGpu_getProcessMem(pid_t pid);
  * value does not change at runtime. */
 unsigned long long int NvmlGpu_getTotalMem(void);
 
+/* Returns the highest GPU compute-engine utilization (0..100) observed
+ * across all NVIDIA devices in the last NvmlGpu_refresh() cycle, or 0
+ * if NVML is unavailable or no device responded. */
+unsigned int NvmlGpu_getUtilization(void);
+
+/* Returns the highest GPU die temperature in °C across all NVIDIA
+ * devices in the last NvmlGpu_refresh() cycle, or 0 if NVML is
+ * unavailable or no device responded. */
+unsigned int NvmlGpu_getTemperature(void);
+
+/* Returns the sum of currently-used physical GPU memory (bytes) across
+ * every NVIDIA device, refreshed each NvmlGpu_refresh() cycle. 0 if
+ * NVML is unavailable. */
+unsigned long long int NvmlGpu_getUsedMem(void);
+
 #endif /* HEADER_NvmlGpu */

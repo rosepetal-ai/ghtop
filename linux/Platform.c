@@ -52,7 +52,9 @@ in the source distribution for its full text.
 #include "linux/IOPriority.h"
 #include "linux/IOPriorityPanel.h"
 #include "linux/LinuxMachine.h"
+#include "linux/GPUMemMeter.h"
 #include "linux/LinuxProcess.h"
+#include "linux/NvmlGpu.h"
 #include "linux/OpenRCMeter.h"
 #include "linux/SELinuxMeter.h"
 #include "linux/SystemdMeter.h"
@@ -236,6 +238,7 @@ const MeterClass* const Platform_meterTypes[] = {
    &LoadAverageMeter_class,
    &LoadMeter_class,
    &MemoryMeter_class,
+   &GPUMemMeter_class,
    &SwapMeter_class,
    &MemorySwapMeter_class,
    &SysArchMeter_class,
@@ -428,6 +431,15 @@ void Platform_setGPUValues(Meter* this, double* totalUsage, unsigned long long* 
 
       *totalGPUTimeDiff = saturatingSub(lhost->curGpuTime, lhost->prevGpuTime);
       *totalUsage = 100.0 * (*totalGPUTimeDiff) / (1000 * 1000) / monotonictimeDelta;
+
+      /* NVIDIA's proprietary driver does not export drm-engine-* fdinfo, so
+       * the DRM-based total is always 0 on those cards. Blend in the NVML
+       * device utilization (max across cards) so the meter reflects reality. */
+      double nvmlUsage = (double)NvmlGpu_getUtilization();
+      if (nvmlUsage > *totalUsage) {
+         residuePercentage += nvmlUsage - *totalUsage;
+         *totalUsage = nvmlUsage;
+      }
 
       prevResidueTime = curResidueTime;
       prevMonotonicMs = host->monotonicMs;

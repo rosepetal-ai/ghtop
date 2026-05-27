@@ -41,11 +41,21 @@ typedef struct {
    unsigned long long used;
 } nvmlMemory_t;
 
+typedef struct {
+   unsigned int gpu;
+   unsigned int memory;
+} nvmlUtilization_t;
+
+typedef int nvmlTemperatureSensors_t;
+#define NVML_TEMPERATURE_GPU 0
+
 extern nvmlReturn_t nvmlInit_v2(void);
 extern nvmlReturn_t nvmlShutdown(void);
 extern nvmlReturn_t nvmlDeviceGetCount_v2(unsigned int* deviceCount);
 extern nvmlReturn_t nvmlDeviceGetHandleByIndex_v2(unsigned int index, nvmlDevice_t* device);
 extern nvmlReturn_t nvmlDeviceGetMemoryInfo(nvmlDevice_t device, nvmlMemory_t* memory);
+extern nvmlReturn_t nvmlDeviceGetUtilizationRates(nvmlDevice_t device, nvmlUtilization_t* utilization);
+extern nvmlReturn_t nvmlDeviceGetTemperature(nvmlDevice_t device, nvmlTemperatureSensors_t sensorType, unsigned int* temp);
 extern nvmlReturn_t nvmlDeviceGetComputeRunningProcesses_v3(nvmlDevice_t device, unsigned int* infoCount, nvmlProcessInfo_t* infos);
 extern nvmlReturn_t nvmlDeviceGetGraphicsRunningProcesses_v3(nvmlDevice_t device, unsigned int* infoCount, nvmlProcessInfo_t* infos);
 
@@ -53,6 +63,9 @@ extern nvmlReturn_t nvmlDeviceGetGraphicsRunningProcesses_v3(nvmlDevice_t device
 static bool initialized = false;
 static unsigned int deviceCount = 0;
 static unsigned long long int totalMem = 0;
+static unsigned long long int usedMem = 0;
+static unsigned int maxUtilPercent = 0;
+static unsigned int maxTempC = 0;
 static Hashtable* pidMem = NULL;  /* pid -> unsigned long long* (owned) */
 
 
@@ -135,6 +148,9 @@ void NvmlGpu_refresh(void) {
       return;
 
    Hashtable_clear(pidMem);
+   maxUtilPercent = 0;
+   maxTempC = 0;
+   usedMem = 0;
 
    for (unsigned int i = 0; i < deviceCount; i++) {
       nvmlDevice_t dev;
@@ -143,6 +159,18 @@ void NvmlGpu_refresh(void) {
 
       queryDevice(dev, nvmlDeviceGetComputeRunningProcesses_v3);
       queryDevice(dev, nvmlDeviceGetGraphicsRunningProcesses_v3);
+
+      nvmlUtilization_t util;
+      if (nvmlDeviceGetUtilizationRates(dev, &util) == NVML_SUCCESS && util.gpu > maxUtilPercent)
+         maxUtilPercent = util.gpu;
+
+      unsigned int temp;
+      if (nvmlDeviceGetTemperature(dev, NVML_TEMPERATURE_GPU, &temp) == NVML_SUCCESS && temp > maxTempC)
+         maxTempC = temp;
+
+      nvmlMemory_t mem;
+      if (nvmlDeviceGetMemoryInfo(dev, &mem) == NVML_SUCCESS)
+         usedMem += mem.used;
    }
 }
 
@@ -156,4 +184,16 @@ unsigned long long int NvmlGpu_getProcessMem(pid_t pid) {
 
 unsigned long long int NvmlGpu_getTotalMem(void) {
    return totalMem;
+}
+
+unsigned int NvmlGpu_getUtilization(void) {
+   return maxUtilPercent;
+}
+
+unsigned int NvmlGpu_getTemperature(void) {
+   return maxTempC;
+}
+
+unsigned long long int NvmlGpu_getUsedMem(void) {
+   return usedMem;
 }

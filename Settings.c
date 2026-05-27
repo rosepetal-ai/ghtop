@@ -119,7 +119,7 @@ static bool Settings_validateMeters(Settings* this) {
 
 static void Settings_defaultMeters(Settings* this, const Machine* host) {
    (void)host;
-   size_t sizes[] = { 4, 4 };
+   size_t sizes[] = { 5, 4 };
 
    // Release any previously allocated memory
    Settings_deleteColumns(this);
@@ -134,12 +134,14 @@ static void Settings_defaultMeters(Settings* this, const Machine* host) {
 
    this->hColumns[0].names[0] = xStrdup("CPU");
    this->hColumns[0].modes[0] = BAR_METERMODE;
-   this->hColumns[0].names[1] = xStrdup("GPU");
+   this->hColumns[0].names[1] = xStrdup("Memory");
    this->hColumns[0].modes[1] = BAR_METERMODE;
-   this->hColumns[0].names[2] = xStrdup("Memory");
+   this->hColumns[0].names[2] = xStrdup("Swap");
    this->hColumns[0].modes[2] = BAR_METERMODE;
-   this->hColumns[0].names[3] = xStrdup("Swap");
+   this->hColumns[0].names[3] = xStrdup("GPU");
    this->hColumns[0].modes[3] = BAR_METERMODE;
+   this->hColumns[0].names[4] = xStrdup("VRM");
+   this->hColumns[0].modes[4] = BAR_METERMODE;
    this->hColumns[1].names[0] = xStrdup("Tasks");
    this->hColumns[1].modes[0] = TEXT_METERMODE;
    this->hColumns[1].names[1] = xStrdup("LoadAverage");

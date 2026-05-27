@@ -52,7 +52,7 @@ static void CPUMeter_init(Meter* this) {
    unsigned int cpu = this->param;
    const Machine* host = this->host;
    if (cpu == 0) {
-      Meter_setCaption(this, "Avg");
+      Meter_setCaption(this, "CPU");
    } else if (host->activeCPUs > 1) {
       char caption[10];
       if (host->settings->showCPUSMTLabels) {

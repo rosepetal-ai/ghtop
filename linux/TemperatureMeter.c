@@ -20,11 +20,14 @@ in the source distribution for its full text.
 #include "RichString.h"
 #include "XUtils.h"
 
+#include "linux/NvmlGpu.h"
+
 
 #define HWMON_BASE "/sys/class/hwmon"
 
 enum {
    TEMP_CPU = 0,
+   TEMP_GPU,
    TEMP_PCH,
    TEMP_RAM,
    TEMP_NVME,
@@ -33,10 +36,11 @@ enum {
 };
 
 static const char* const TemperatureMeter_labels[TEMP_COUNT] = {
-   "CPU", "PCH", "RAM", "NVMe", "NIC"
+   "CPU", "GPU", "PCH", "RAM", "NVMe", "NIC"
 };
 
 static const int TemperatureMeter_attributes[TEMP_COUNT] = {
+   METER_VALUE_ERROR,
    METER_VALUE_ERROR,
    METER_VALUE_WARN,
    METER_VALUE_NOTICE,
@@ -211,6 +215,10 @@ static void TemperatureMeter_readAll(double out[TEMP_COUNT]) {
       free(name);
    }
    closedir(base);
+
+   unsigned int gpuTemp = NvmlGpu_getTemperature();
+   if (gpuTemp > 0)
+      out[TEMP_GPU] = (double)gpuTemp;
 }
 
 static void TemperatureMeter_updateValues(Meter* this) {
@@ -229,10 +237,10 @@ static void TemperatureMeter_updateValues(Meter* this) {
    /* Plain-text fallback used when the meter is rendered in TEXT mode by a
       caption-less consumer (e.g. legacy themes). */
    xSnprintf(this->txtBuffer, sizeof(this->txtBuffer),
-             "CPU:%.0f PCH:%.0f RAM:%.0f NVMe:%.0f NIC:%.0f",
-             this->values[TEMP_CPU], this->values[TEMP_PCH],
-             this->values[TEMP_RAM], this->values[TEMP_NVME],
-             this->values[TEMP_NIC]);
+             "CPU:%.0f GPU:%.0f PCH:%.0f RAM:%.0f NVMe:%.0f NIC:%.0f",
+             this->values[TEMP_CPU], this->values[TEMP_GPU],
+             this->values[TEMP_PCH], this->values[TEMP_RAM],
+             this->values[TEMP_NVME], this->values[TEMP_NIC]);
 }
 
 static void TemperatureMeter_display(const Object* cast, RichString* out) {
@@ -256,8 +264,11 @@ static void TemperatureMeter_display(const Object* cast, RichString* out) {
 
       int attr = CRT_colors[METER_VALUE];
       /* Highlight values that exceed the comfort thresholds the rosepetal
-         thermal script flags - matches the BAD/WARN categories there. */
+         thermal script flags - matches the BAD/WARN categories there.
+         GPU threshold is conservative; NVIDIA consumer GPUs throttle at
+         ~83-90°C depending on model. */
       if ((i == TEMP_CPU && v >= 90.0) ||
+          (i == TEMP_GPU && v >= 85.0) ||
           (i == TEMP_PCH && v >= 90.0) ||
           (i == TEMP_RAM && v >= 75.0) ||
           (i == TEMP_NVME && v >= 75.0)) {
