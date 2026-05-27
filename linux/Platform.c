@@ -56,6 +56,7 @@ in the source distribution for its full text.
 #include "linux/OpenRCMeter.h"
 #include "linux/SELinuxMeter.h"
 #include "linux/SystemdMeter.h"
+#include "linux/TemperatureMeter.h"
 #include "linux/ZramMeter.h"
 #include "linux/ZramStats.h"
 #include "linux/ZswapStats.h"
@@ -265,6 +266,7 @@ const MeterClass* const Platform_meterTypes[] = {
    &PressureStallMemoryFullMeter_class,
    &ZfsArcMeter_class,
    &ZfsCompressedArcMeter_class,
+   &TemperatureMeter_class,
    &ZramMeter_class,
    &DiskIORateMeter_class,
    &DiskIOTimeMeter_class,
