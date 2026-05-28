@@ -32,9 +32,10 @@ detect_suffix() {
   case "$ID" in
     ubuntu)
       case "$VERSION_ID" in
+        20.04) echo "ubuntu20.04" ;;
         22.04) echo "ubuntu22.04" ;;
         24.04) echo "ubuntu24.04" ;;
-        *) die "Unsupported Ubuntu version: $VERSION_ID (supported: 22.04, 24.04)" ;;
+        *) die "Unsupported Ubuntu version: $VERSION_ID (supported: 20.04, 22.04, 24.04)" ;;
       esac
       ;;
     debian)
