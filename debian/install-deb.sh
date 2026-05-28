@@ -3,7 +3,10 @@ set -Eeuo pipefail
 
 VERSION="3.6.0-r1"
 APP="ghtop"
-BASE_URL="https://raw.githubusercontent.com/rosepetal-ai/ghtop/refs/heads/main/debian/build"
+# Use github.com/.../raw/... (redirects to media.githubusercontent.com) instead of
+# raw.githubusercontent.com directly: the latter has a ~5min edge cache keyed by
+# branch ref that frequently serves a stale .deb right after a push.
+BASE_URL="https://github.com/rosepetal-ai/ghtop/raw/refs/heads/main/debian/build"
 
 log()  { printf '[%s] %s\n' "$APP" "$*"; }
 warn() { printf '[%s][warn] %s\n' "$APP" "$*" >&2; }
