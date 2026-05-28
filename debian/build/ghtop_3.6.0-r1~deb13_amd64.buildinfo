@@ -4,17 +4,17 @@ Binary: ghtop ghtop-dbgsym
 Architecture: amd64
 Version: 3.6.0-r1~deb13
 Checksums-Md5:
- d1ee58cceb7d6def1c86f24c6132f366 443152 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
- 0d5d4d7504aad57255152841dd14739a 183820 ghtop_3.6.0-r1~deb13_amd64.deb
+ 417c63a5b46c82282ced348a224955b9 443156 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ a35710792c5c13c250642f1b66710b68 183752 ghtop_3.6.0-r1~deb13_amd64.deb
 Checksums-Sha1:
- 6fbe1b3d03967c2b183fdabd8b52ec74e19af3e5 443152 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
- 596acd34089df7792ca0b53933d869141ddb49ae 183820 ghtop_3.6.0-r1~deb13_amd64.deb
+ 21774c3e8c60c526affba5ab287214acac649fa9 443156 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ cc3ba0b0f48608cd88ca2c48555e3fa982d548fc 183752 ghtop_3.6.0-r1~deb13_amd64.deb
 Checksums-Sha256:
- 4dbede66fb0b411750210541e0f13b21621cce966cfdaccfdc00d99a623c7789 443152 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
- 7a83d0fa188642d8d551b8de13086d789fc02d2fea2fe676f0b24723b148ac9e 183820 ghtop_3.6.0-r1~deb13_amd64.deb
+ fdb0ce17069b778f1546fcb30fe5db9f8058c43d5bdbd0f7015254052b61d43a 443156 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ 1255be5a6cc39067ea67bddb8e2ed51b8dac43bbbcaf352a157d7b2d211a48ee 183752 ghtop_3.6.0-r1~deb13_amd64.deb
 Build-Origin: Debian
 Build-Architecture: amd64
-Build-Date: Wed, 27 May 2026 23:37:45 +0000
+Build-Date: Thu, 28 May 2026 00:53:10 +0000
 Build-Path: /build/ghtop
 Installed-Build-Depends:
  autoconf (= 2.72-3.1),
@@ -189,4 +189,4 @@ Installed-Build-Depends:
  zlib1g (= 1:1.3.dfsg+really1.3.1-1+b1)
 Environment:
  DEB_BUILD_OPTIONS="parallel=32"
- SOURCE_DATE_EPOCH="1779925055"
+ SOURCE_DATE_EPOCH="1779929579"

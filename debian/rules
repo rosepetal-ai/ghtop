@@ -14,3 +14,19 @@ override_dh_auto_configure:
 		--enable-delayacct \
 		--enable-sensors \
 		--enable-unicode
+
+# Strip libnvidia-* entries from the auto-generated shlibs:Depends. The
+# binary links against libnvidia-ml.so.1, but target hosts already have an
+# NVIDIA driver installed at an unpredictable version, so we don't want
+# dpkg to refuse the install (or pull in a specific driver package) just
+# because the build host had e.g. libnvidia-compute-535.
+override_dh_shlibdeps:
+	dh_shlibdeps
+	for f in debian/*.substvars; do \
+	    [ -f "$$f" ] || continue; \
+	    sed -i -E \
+	        -e 's/, libnvidia-[^,]+//g' \
+	        -e 's/libnvidia-[^,]+, //g' \
+	        -e 's/=libnvidia-[^,]+$$/=/' \
+	        "$$f"; \
+	done

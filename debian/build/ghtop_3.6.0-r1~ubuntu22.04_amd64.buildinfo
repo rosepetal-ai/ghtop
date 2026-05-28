@@ -4,17 +4,17 @@ Binary: ghtop ghtop-dbgsym
 Architecture: amd64
 Version: 3.6.0-r1~ubuntu22.04
 Checksums-Md5:
- 1b1e8ae80730e7b22bad6b49ca1f8ca4 571638 ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
- 0ccf4df94da65ebf6364cbc366d552bf 189954 ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
+ b2b63b151588b315ae747b87de8a7282 571642 ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
+ 8310004194fe6a68b1c33d6bc694f4b0 189978 ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
 Checksums-Sha1:
- 23ba4680ccfec718e6e74153e05e772e3ca27dc2 571638 ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
- ab91663634319bd7f0fc4168cb16f831a328af69 189954 ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
+ 9359483ac2e946176efd1c3ffe70a1d57cd92b75 571642 ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
+ fc549870af325b983de495ab9819ec3b8d2ff202 189978 ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
 Checksums-Sha256:
- 8ef966e750d0e8e3be5ba48418d67a7caa149b4fb80f0240c50bb70173a32e39 571638 ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
- 0a20f63bf0e613001f867387fbf4947ce6574b2db5f4de505108b1e717e6cd12 189954 ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
+ ea68131ffc7b6990a0894d585c0b81ae201e85132455930488ec81e030972d7f 571642 ghtop-dbgsym_3.6.0-r1~ubuntu22.04_amd64.ddeb
+ f234e11cdb68bbab2db3af4471b56acab4fedad4ad7f70687f3286d7d79e9ebe 189978 ghtop_3.6.0-r1~ubuntu22.04_amd64.deb
 Build-Origin: Ubuntu
 Build-Architecture: amd64
-Build-Date: Wed, 27 May 2026 23:32:54 +0000
+Build-Date: Thu, 28 May 2026 00:52:52 +0000
 Build-Path: /build/ghtop
 Build-Tainted-By:
  merged-usr-via-aliased-dirs
@@ -193,4 +193,4 @@ Installed-Build-Depends:
 Environment:
  DEB_BUILD_OPTIONS="parallel=32"
  DEB_BUILD_PROFILES="noudeb"
- SOURCE_DATE_EPOCH="1779924763"
+ SOURCE_DATE_EPOCH="1779929560"

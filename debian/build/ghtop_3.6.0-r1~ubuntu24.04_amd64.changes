@@ -1,5 +1,5 @@
 Format: 1.8
-Date: Wed, 27 May 2026 23:19:35 +0000
+Date: Thu, 28 May 2026 00:52:06 +0000
 Source: ghtop
 Binary: ghtop
 Built-For-Profiles: noudeb
@@ -8,12 +8,13 @@ Version: 3.6.0-r1~ubuntu24.04
 Distribution: noble
 Urgency: medium
 Maintainer: Rosepetal <dev@rosepetal.ai>
-Changed-By: Rosepetal <dev@rosepetal.ai>
+Changed-By: root <root@rosepetal-dev-tx>
 Description:
  ghtop      - ghtop - htop fork with NVIDIA GPU and Docker columns
 Changes:
  ghtop (3.6.0-r1~ubuntu24.04) noble; urgency=medium
  .
+   [ Rosepetal ]
    * Initial Rosepetal packaging of ghtop, an htop fork that adds:
      - GPU usage bar in the default header layout
      - Temperatures meter (CPU/GPU/PCH/RAM/NVMe/NIC)
@@ -22,14 +23,14 @@ Changes:
    * Binary installed as /usr/bin/ghtop to coexist with system htop.
    * Automated build for noble.
 Checksums-Sha1:
- cd13f66a215c7173be423ccc1790f709f9459d09 565070 ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
- b06304682ee98a1fcc16b6328c0f9d9e58f6790d 6882 ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
- 80de1c73067058e076565904c08cc72bf37ac3dd 187888 ghtop_3.6.0-r1~ubuntu24.04_amd64.deb
+ d27ba01d927f86ed0ab9f2ca7f88a92ceaff5535 565102 ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
+ 1eed8a1d330900e2a76b9ef784ce8fe5b00fb638 6882 ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
+ cf1c3973a66f83fbc247abe342669b4eff3cbbc6 187368 ghtop_3.6.0-r1~ubuntu24.04_amd64.deb
 Checksums-Sha256:
- 47b4a7fb3a2f1bede7ab586e1550c80e21c79a878a97c1c104f1b7d5be1bfcf7 565070 ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
- 1e563c98087738c96032528b5649a871e27a432bafc6f3402c4128bb81e5a52d 6882 ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
- f4af72b844041cacb0c1e506afe8d721c0354fe55e5350cfdb854ec77e24dcc5 187888 ghtop_3.6.0-r1~ubuntu24.04_amd64.deb
+ 2304b2fe7caba1979f73104a8e3d96473ab4baa65b6b9dfd976891db7ec99f83 565102 ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
+ 4db8f691e927ad07d5ea6c9a866202b69f315a5958cdc67f4f8b0718f0582d08 6882 ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
+ c8d29afd05fa0e76abca29b99846185095b78a79b8254694a5f0e692d1f2ef35 187368 ghtop_3.6.0-r1~ubuntu24.04_amd64.deb
 Files:
- b9505074ae11d362ef615fb65adc4faa 565070 debug optional ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
- ed862bfbf55147564c82fcf4ea708c04 6882 utils optional ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
- 90e2596463a0e8625aad88da9ea3c747 187888 utils optional ghtop_3.6.0-r1~ubuntu24.04_amd64.deb
+ 871727312f8bfc4f005c6ff18d008c60 565102 debug optional ghtop-dbgsym_3.6.0-r1~ubuntu24.04_amd64.ddeb
+ 25fbf3734718e13d30eeebde5eefaaf2 6882 utils optional ghtop_3.6.0-r1~ubuntu24.04_amd64.buildinfo
+ 747de6b04f73a253c9aa74ca60f2837a 187368 utils optional ghtop_3.6.0-r1~ubuntu24.04_amd64.deb

@@ -1,5 +1,5 @@
 Format: 1.8
-Date: Wed, 27 May 2026 23:37:35 +0000
+Date: Thu, 28 May 2026 00:52:59 +0000
 Source: ghtop
 Binary: ghtop ghtop-dbgsym
 Architecture: amd64
@@ -7,12 +7,13 @@ Version: 3.6.0-r1~deb13
 Distribution: trixie
 Urgency: medium
 Maintainer: Rosepetal <dev@rosepetal.ai>
-Changed-By: Rosepetal <dev@rosepetal.ai>
+Changed-By: root <root@rosepetal-dev-tx.banded-pythagorean.ts.net>
 Description:
  ghtop      - ghtop - htop fork with NVIDIA GPU and Docker columns
 Changes:
  ghtop (3.6.0-r1~deb13) trixie; urgency=medium
  .
+   [ Rosepetal ]
    * Initial Rosepetal packaging of ghtop, an htop fork that adds:
      - GPU usage bar in the default header layout
      - Temperatures meter (CPU/GPU/PCH/RAM/NVMe/NIC)
@@ -21,14 +22,14 @@ Changes:
    * Binary installed as /usr/bin/ghtop to coexist with system htop.
    * Automated build for trixie.
 Checksums-Sha1:
- 6fbe1b3d03967c2b183fdabd8b52ec74e19af3e5 443152 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
- 472aacd63395000fd9b5d13e2d0eb571486a3b45 5674 ghtop_3.6.0-r1~deb13_amd64.buildinfo
- 596acd34089df7792ca0b53933d869141ddb49ae 183820 ghtop_3.6.0-r1~deb13_amd64.deb
+ 21774c3e8c60c526affba5ab287214acac649fa9 443156 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ 10d8fce280533135693ae706bfbdce2dbb4e78b9 5674 ghtop_3.6.0-r1~deb13_amd64.buildinfo
+ cc3ba0b0f48608cd88ca2c48555e3fa982d548fc 183752 ghtop_3.6.0-r1~deb13_amd64.deb
 Checksums-Sha256:
- 4dbede66fb0b411750210541e0f13b21621cce966cfdaccfdc00d99a623c7789 443152 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
- 1df88a1ec996cb9ae7e0b6474fd8d874b3125b3e07155dc178dfefde933321c2 5674 ghtop_3.6.0-r1~deb13_amd64.buildinfo
- 7a83d0fa188642d8d551b8de13086d789fc02d2fea2fe676f0b24723b148ac9e 183820 ghtop_3.6.0-r1~deb13_amd64.deb
+ fdb0ce17069b778f1546fcb30fe5db9f8058c43d5bdbd0f7015254052b61d43a 443156 ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ 5202b7904b70c8104a5ab5a35a4cd4d3197987ee471df41954075019244f3b22 5674 ghtop_3.6.0-r1~deb13_amd64.buildinfo
+ 1255be5a6cc39067ea67bddb8e2ed51b8dac43bbbcaf352a157d7b2d211a48ee 183752 ghtop_3.6.0-r1~deb13_amd64.deb
 Files:
- d1ee58cceb7d6def1c86f24c6132f366 443152 debug optional ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
- 9b83877d3af02d9180d7000abfacc655 5674 utils optional ghtop_3.6.0-r1~deb13_amd64.buildinfo
- 0d5d4d7504aad57255152841dd14739a 183820 utils optional ghtop_3.6.0-r1~deb13_amd64.deb
+ 417c63a5b46c82282ced348a224955b9 443156 debug optional ghtop-dbgsym_3.6.0-r1~deb13_amd64.deb
+ ba87599494bf1168b5159e35c42958a4 5674 utils optional ghtop_3.6.0-r1~deb13_amd64.buildinfo
+ a35710792c5c13c250642f1b66710b68 183752 utils optional ghtop_3.6.0-r1~deb13_amd64.deb

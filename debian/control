@@ -19,7 +19,6 @@ Homepage: https://github.com/rosepetal-ai/ghtop
 Package: ghtop
 Architecture: linux-any
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Recommends: nvidia-utils-535 | nvidia-utils-545 | nvidia-utils-550 | nvidia-utils-560 | nvidia-utils-570
 Suggests: lm-sensors, lsof, strace
 Description: ghtop - htop fork with NVIDIA GPU and Docker columns
  ghtop is a fork of htop adapted to the rosepetal training and
@@ -31,5 +30,7 @@ Description: ghtop - htop fork with NVIDIA GPU and Docker columns
     container names via `docker ps`
  .
  The binary is installed as /usr/bin/ghtop so it can coexist with the
- standard htop package. NVML is loaded at startup; on machines without
- an NVIDIA driver the GPU-related fields just stay at zero.
+ standard htop package. NVML (libnvidia-ml.so.1) is loaded at runtime
+ from whichever NVIDIA driver is installed; the package itself does
+ not pin a driver version, and on machines without an NVIDIA driver
+ the GPU-related fields just stay at zero.
